@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 from keras_retinanet import models
 from keras_retinanet.utils.colors import label_color
-from keras_retinanet.utils.visualization import draw_box, draw_caption
+from keras_retinanet.utils.visualization import  draw_caption
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
 
 
@@ -39,6 +39,19 @@ output_path = args["output_dir"]
 THRES_SCORE = args["threshold"]
 model = models.load_model(args["model"], backbone_name='resnet50')
 inference_images = [os.path.join(input_path, file) for file in glob.glob(input_path + '*.jpg')]
+
+
+def draw_box(image, box, color, thickness=15):
+    """ Draws a box on an image with a given color.
+
+    # Arguments
+        image     : The image to draw on.
+        box       : A list of 4 elements (x1, y1, x2, y2).
+        color     : The color of the box.
+        thickness : The thickness of the lines to draw a box with.
+    """
+    b = np.array(box).astype(int)
+    cv2.rectangle(image, (b[0], b[1]), (b[2], b[3]), color, thickness, cv2.LINE_AA)
 
 # loop over inference images
 for (i, img_path) in enumerate(inference_images):
@@ -62,7 +75,6 @@ for (i, img_path) in enumerate(inference_images):
     (boxes, scores, labels) = model.predict_on_batch(image)
     print("processing time: ", time.time() - start)
     boxes /= scale
-
     # visualize detections
     for (box, score, label) in zip(boxes[0], scores[0], labels[0]):
         # scores are sorted so we can break
@@ -73,13 +85,14 @@ for (i, img_path) in enumerate(inference_images):
         b = box.astype(int)
 
         # draw bounding box
-        draw_box(draw, b, color=color)
-        plt.figure(figsize=(6, 6))
+        draw_box(draw, b, color=(230,239,36))
+        plt.figure(figsize=(20, 20))
         plt.axis('off')
         plt.imshow(draw)
-
+      
         # save in output path
         plt.savefig(os.path.join(output_path, "bb_" + os.path.basename(img_path)))
+        
 
 print("[FINAL] task completed!")
 
