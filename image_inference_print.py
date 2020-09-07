@@ -43,7 +43,6 @@ inference_images = [os.path.join(input_path, file) for file in glob.glob(input_p
 
 def draw_box(image, box, color, thickness=15):
     """ Draws a box on an image with a given color.
-
     # Arguments
         image     : The image to draw on.
         box       : A list of 4 elements (x1, y1, x2, y2).
@@ -60,7 +59,6 @@ for (i, img_path) in enumerate(inference_images):
 
     #load image
     image = read_image_bgr(img_path)
-
     # copy to draw on
     draw = image.copy()
     draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
@@ -85,14 +83,17 @@ for (i, img_path) in enumerate(inference_images):
         b = box.astype(int)
 
         # draw bounding box
-        draw_box(draw, b, color=(230,239,36))
-        plt.figure(figsize=(20, 20))
-        plt.axis('off')
-        plt.imshow(draw)
-      
+        draw_box(draw, b, color=color)
+
+
+        #plt.figure(figsize=(20, 20))
+        #plt.axis('off')
+        #plt.imshow(draw)
         # save in output path
-        plt.savefig(os.path.join(output_path, "bb_" + os.path.basename(img_path)))
-        
+
+        #plt.savefig(os.path.join(output_path, "bb_" + os.path.basename(img_path)))
+        cv2.imwrite(os.path.join(output_path, '{}.png'.format(i)), cv2.cvtColor(draw, cv2.COLOR_RGB2BGR))
+        #plt.close()
 
 print("[FINAL] task completed!")
 
