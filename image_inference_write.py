@@ -1,7 +1,5 @@
 """
-Image Inference:
-Takes the path to the unseen inference images directory and outputs images with bounding
-boxes around detections.
+Generar predicciones (coordenadas de clase y cuadro delimitador) en nuevas imágenes y guardarlas en archivos CSV
 """
 
 
